@@ -41,6 +41,25 @@ class StepsTableViewController: UITableViewController {
     
     self.title = "Steps"
     
+    self.setupTableView()
+    self.setupObservers()
+    
+    self.fetchSteps()
+  }
+  
+  private func setupObservers() {
+    let _ = HealthKitHelper.shared.$stepsResponse
+      .subscribe(on: DispatchQueue.main)
+      .receive(on: DispatchQueue.main)
+      .map { $0.map { StepsStatistic(startDate: $0.startDate, steps: Int($0.steps)) } }
+      .sink { statistics in
+        self.tableView.reloadData()
+        self.stepStatistics = statistics
+        self.refreshControl?.endRefreshing()
+      }
+  }
+  
+  private func setupTableView() {
     let orderButton = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"),
                                       style: .plain,
                                       target: self,
@@ -52,15 +71,12 @@ class StepsTableViewController: UITableViewController {
     self.tableView.dataSource = dataSource
     self.tableView.allowsSelection = false
     
-    let _ = HealthKitHelper.shared.$stepsResponse
-      .subscribe(on: DispatchQueue.main)
-      .receive(on: DispatchQueue.main)
-      .map { $0.map { StepsStatistic(startDate: $0.startDate, steps: Int($0.steps)) } }
-      .sink { statistics in
-        self.tableView.reloadData()
-        self.stepStatistics = statistics
-      }
-    
+    let refreshControl = UIRefreshControl()
+    refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+    self.refreshControl = refreshControl
+  }
+  
+  private func fetchSteps() {
     HealthKitHelper.shared.retrieveStepCount() { error in
       // TODO: show alert
     }
@@ -88,6 +104,10 @@ class StepsTableViewController: UITableViewController {
 extension StepsTableViewController {
   @objc func orderButtonTapped() {
     HealthKitHelper.shared.toggleOrder()
+  }
+  
+  @objc func refresh(_ sender: AnyObject) {
+    self.fetchSteps()
   }
 }
 
