@@ -67,17 +67,12 @@
 		9314CA8F24C18F5B00EC5A65 /* HealthKitStepper */ = {
 			isa = PBXGroup;
 			children = (
+				9314CAB224C31D5400EC5A65 /* App */,
 				9314CAAD24C2933700EC5A65 /* Models */,
+				9314CAB124C31D3D00EC5A65 /* Views */,
+				9314CAB024C31CD600EC5A65 /* View Controllers */,
+				9314CAB424C31DCF00EC5A65 /* Resources */,
 				9314CAAA24C19C9D00EC5A65 /* Utilities */,
-				9314CAA424C1904000EC5A65 /* HealthKitStepper.entitlements */,
-				9314CA9024C18F5C00EC5A65 /* AppDelegate.swift */,
-				9314CA9224C18F5C00EC5A65 /* SceneDelegate.swift */,
-				9314CAA824C19B9600EC5A65 /* SplashViewController.swift */,
-				9314CA9424C18F5C00EC5A65 /* StepsTableViewController.swift */,
-				9314CA9624C18F5C00EC5A65 /* Main.storyboard */,
-				9314CA9924C18F5D00EC5A65 /* Assets.xcassets */,
-				9314CA9B24C18F5D00EC5A65 /* LaunchScreen.storyboard */,
-				9314CA9E24C18F5D00EC5A65 /* Info.plist */,
 			);
 			path = HealthKitStepper;
 			sourceTree = "<group>";
@@ -104,6 +99,43 @@
 				9314CAAE24C2936700EC5A65 /* StepsStatistic.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		9314CAB024C31CD600EC5A65 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				9314CAA824C19B9600EC5A65 /* SplashViewController.swift */,
+				9314CA9424C18F5C00EC5A65 /* StepsTableViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		9314CAB124C31D3D00EC5A65 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9314CA9624C18F5C00EC5A65 /* Main.storyboard */,
+				9314CA9B24C18F5D00EC5A65 /* LaunchScreen.storyboard */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		9314CAB224C31D5400EC5A65 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				9314CA9024C18F5C00EC5A65 /* AppDelegate.swift */,
+				9314CA9224C18F5C00EC5A65 /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		9314CAB424C31DCF00EC5A65 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9314CAA424C1904000EC5A65 /* HealthKitStepper.entitlements */,
+				9314CA9924C18F5D00EC5A65 /* Assets.xcassets */,
+				9314CA9E24C18F5D00EC5A65 /* Info.plist */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
