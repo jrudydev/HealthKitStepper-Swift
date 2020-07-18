@@ -8,21 +8,9 @@
 
 import UIKit
 
+
 class StepsTableViewController: UITableViewController {
-  
-  internal enum Section: CaseIterable {
-      case main
-  }
-  
-  private class StepsTableViewDiffableDataSource: UITableViewDiffableDataSource<Section, StepsStatistic> {
-      
-      override func tableView(_ tableView: UITableView,
-                              titleForHeaderInSection section: Int) -> String? {
-          return snapshot().sectionIdentifiers[section].title.uppercased()
-      }
-    
-  }
-  
+
   private let cellReuseIdentifier = "stepscell"
   private lazy var dataSource = makeDataSource()
   
@@ -47,6 +35,41 @@ class StepsTableViewController: UITableViewController {
     self.fetchSteps()
   }
   
+}
+
+extension StepsTableViewController {
+  internal enum Section: CaseIterable {
+      case main
+  }
+  
+  private class StepsTableViewDiffableDataSource: UITableViewDiffableDataSource<Section, StepsStatistic> {
+      
+      override func tableView(_ tableView: UITableView,
+                              titleForHeaderInSection section: Int) -> String? {
+          return snapshot().sectionIdentifiers[section].title.uppercased()
+      }
+    
+  }
+  
+  private func makeDataSource() -> StepsTableViewDiffableDataSource {
+    let cellId = cellReuseIdentifier
+    return StepsTableViewDiffableDataSource(
+      tableView: self.tableView,
+      cellProvider: {  tableView, indexPath, statistic in
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellId)
+      
+        cell.textLabel?.text = "\(statistic.steps)"
+        cell.detailTextLabel?.text = statistic.dayOfWeekLabel
+        let label = UILabel(frame: .zero)
+        label.text = statistic.startDateLabel
+        label.sizeToFit()
+        cell.accessoryView = label
+        return cell
+    })
+  }
+}
+
+extension StepsTableViewController {
   private func setupObservers() {
     let _ = HealthKitHelper.shared.$stepsResponse
       .subscribe(on: DispatchQueue.main)
@@ -81,24 +104,6 @@ class StepsTableViewController: UITableViewController {
       // TODO: show alert
     }
   }
-
-  private func makeDataSource() -> StepsTableViewDiffableDataSource {
-    let cellId = cellReuseIdentifier
-    return StepsTableViewDiffableDataSource(
-      tableView: self.tableView,
-      cellProvider: {  tableView, indexPath, statistic in
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellId)
-      
-        cell.textLabel?.text = "\(statistic.steps)"
-        cell.detailTextLabel?.text = statistic.dayOfWeekLabel
-        let label = UILabel(frame: .zero)
-        label.text = statistic.startDateLabel
-        label.sizeToFit()
-        cell.accessoryView = label
-        return cell
-    })
-  }
-  
 }
 
 extension StepsTableViewController {
