@@ -31,6 +31,12 @@ class StepsTableViewController: UITableViewController {
     super.viewDidLoad()
     
     self.title = "Steps"
+    
+    let orderButton = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"),
+                                      style: .plain,
+                                      target: self,
+                                      action:#selector(StepsTableViewController.orderButtonTapped))
+    self.navigationItem.rightBarButtonItem  = orderButton
     self.navigationController?.navigationBar.prefersLargeTitles = true
     
     self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
@@ -68,3 +74,8 @@ class StepsTableViewController: UITableViewController {
   
 }
 
+extension StepsTableViewController {
+  @objc func orderButtonTapped() {
+    HealthKitHelper.shared.toggleOrder()
+  }
+}

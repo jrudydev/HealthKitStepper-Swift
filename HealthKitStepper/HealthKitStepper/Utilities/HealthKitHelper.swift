@@ -17,8 +17,8 @@ public class HealthKitHelper {
   public typealias StatisticResponse = (startDate: Date, steps: Double)
   
   /// Observable properties that can be used to updated the UI.
-  @Published public var authStatus = "Checking HealthKit authorization status..."
-  @Published public var stepsResponse = [StatisticResponse]()
+  @Published public private (set) var authStatus = "Checking HealthKit authorization status..."
+  @Published public private (set) var stepsResponse = [StatisticResponse]()
   
   /// Optional block that will exectute when HealthKit is not available
   public var dataNotAvailableBlock: (() -> Void)? = nil
@@ -134,11 +134,15 @@ public class HealthKitHelper {
         }
       }
       
-      self.stepsResponse = resultsArray
+      self.stepsResponse = resultsArray.reversed()
       completion(nil)
     }
     
     healthStore.execute(query)
+  }
+  
+  public func toggleOrder() {
+    self.stepsResponse.reverse()
   }
   
 }
