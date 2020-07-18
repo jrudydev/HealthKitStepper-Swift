@@ -12,6 +12,9 @@ import Combine
 import UIKit
 
 
+/// Constant used to create the starting date for the sample two weeks in the past
+let daysInSample = 14
+
 public class HealthKitHelper {
   
   public typealias StatisticResponse = (startDate: Date, steps: Double)
@@ -108,7 +111,7 @@ public class HealthKitHelper {
     
     let today = Date()
     let cal = Calendar(identifier: Calendar.Identifier.gregorian)
-    let startDate = cal.date(byAdding: .day, value: -7, to: today)!
+    let startDate = cal.date(byAdding: .day, value: -daysInSample, to: today)!
     
     let predicate = HKQuery.predicateForSamples(withStart: startDate,
                                                 end: Date(),
