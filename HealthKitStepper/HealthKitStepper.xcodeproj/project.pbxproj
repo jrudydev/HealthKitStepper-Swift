@@ -16,6 +16,7 @@
 		9314CAA724C1904000EC5A65 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9314CAA624C1904000EC5A65 /* HealthKit.framework */; };
 		9314CAA924C19B9600EC5A65 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9314CAA824C19B9600EC5A65 /* SplashViewController.swift */; };
 		9314CAAC24C19CC400EC5A65 /* HealthKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9314CAAB24C19CC400EC5A65 /* HealthKitHelper.swift */; };
+		9314CAAF24C2936700EC5A65 /* StepsStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9314CAAE24C2936700EC5A65 /* StepsStatistic.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		9314CAA624C1904000EC5A65 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		9314CAA824C19B9600EC5A65 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		9314CAAB24C19CC400EC5A65 /* HealthKitHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitHelper.swift; sourceTree = "<group>"; };
+		9314CAAE24C2936700EC5A65 /* StepsStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsStatistic.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 		9314CA8F24C18F5B00EC5A65 /* HealthKitStepper */ = {
 			isa = PBXGroup;
 			children = (
+				9314CAAD24C2933700EC5A65 /* Models */,
 				9314CAAA24C19C9D00EC5A65 /* Utilities */,
 				9314CAA424C1904000EC5A65 /* HealthKitStepper.entitlements */,
 				9314CA9024C18F5C00EC5A65 /* AppDelegate.swift */,
@@ -93,6 +96,14 @@
 				9314CAAB24C19CC400EC5A65 /* HealthKitHelper.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		9314CAAD24C2933700EC5A65 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9314CAAE24C2936700EC5A65 /* StepsStatistic.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -170,6 +181,7 @@
 				9314CA9524C18F5C00EC5A65 /* StepsTableViewController.swift in Sources */,
 				9314CA9124C18F5C00EC5A65 /* AppDelegate.swift in Sources */,
 				9314CA9324C18F5C00EC5A65 /* SceneDelegate.swift in Sources */,
+				9314CAAF24C2936700EC5A65 /* StepsStatistic.swift in Sources */,
 				9314CAA924C19B9600EC5A65 /* SplashViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

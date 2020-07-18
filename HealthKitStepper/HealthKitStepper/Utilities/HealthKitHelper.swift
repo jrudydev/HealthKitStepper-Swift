@@ -14,10 +14,11 @@ import UIKit
 
 public class HealthKitHelper {
   
-  public typealias StepStatistic = (startDate: Date, steps: Double)
+  public typealias StatisticResponse = (startDate: Date, steps: Double)
   
-  /// Observable property that can be used to updated the UI.
+  /// Observable properties that can be used to updated the UI.
   @Published public var authStatus = "Checking HealthKit authorization status..."
+  @Published public var stepsResponse = [StatisticResponse]()
   
   /// Optional block that will exectute when HealthKit is not available
   public var dataNotAvailableBlock: (() -> Void)? = nil
@@ -96,7 +97,7 @@ public class HealthKitHelper {
     }
   }
   
-  public func retrieveStepCount(completion: @escaping ([StepStatistic], Error?) -> Void) {
+  public func retrieveStepCount(completion: @escaping (Error?) -> Void) {
     print("Retrieving step count from HealthKit...")
     
     let today = Date()
@@ -115,7 +116,7 @@ public class HealthKitHelper {
                                             intervalComponents:interval)
     
     query.initialResultsHandler = { query, results, error in
-      if let error = error { completion([], error); return }
+      if let error = error { completion(error); return }
       
       guard let results = results else { return }
       
@@ -133,7 +134,8 @@ public class HealthKitHelper {
         }
       }
       
-      completion(resultsArray, nil)
+      self.stepsResponse = resultsArray
+      completion(nil)
     }
     
     healthStore.execute(query)
