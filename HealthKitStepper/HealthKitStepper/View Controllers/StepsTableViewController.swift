@@ -39,16 +39,19 @@ class StepsTableViewController: UITableViewController {
 
 extension StepsTableViewController {
   internal enum Section: CaseIterable {
-      case main
+    case main
   }
   
   private class StepsTableViewDiffableDataSource: UITableViewDiffableDataSource<Section, StepsStatistic> {
-      
-      override func tableView(_ tableView: UITableView,
-                              titleForHeaderInSection section: Int) -> String? {
-          return snapshot().sectionIdentifiers[section].title.uppercased()
-      }
     
+    override func tableView(_ tableView: UITableView,
+                            titleForHeaderInSection section: Int) -> String? {
+      return snapshot().sectionIdentifiers[section].title.uppercased()
+    }
+  }
+  
+  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+      return kStepCellHeight
   }
   
   private func makeDataSource() -> StepsTableViewDiffableDataSource {
@@ -56,15 +59,12 @@ extension StepsTableViewController {
     return StepsTableViewDiffableDataSource(
       tableView: self.tableView,
       cellProvider: {  tableView, indexPath, statistic in
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellId)
-      
-        cell.textLabel?.text = "\(statistic.steps)"
-        cell.detailTextLabel?.text = statistic.dayOfWeekLabel
-        let label = UILabel(frame: .zero)
-        label.text = statistic.startDateLabel
-        label.sizeToFit()
-        cell.accessoryView = label
-        return cell
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        
+        guard let stepsCell = cell as? StepsTableViewCell else { return cell }
+        
+        stepsCell.setData(statistic: statistic)
+        return stepsCell
     })
   }
 }
@@ -90,7 +90,7 @@ extension StepsTableViewController {
     self.navigationItem.rightBarButtonItem  = orderButton
     self.navigationController?.navigationBar.prefersLargeTitles = true
     
-    self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+    self.tableView.register(StepsTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
     self.tableView.dataSource = dataSource
     self.tableView.allowsSelection = false
     

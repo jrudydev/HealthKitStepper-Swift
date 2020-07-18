@@ -16,7 +16,7 @@ struct StepsStatistic: Hashable {
 extension StepsStatistic {
   var startDateLabel: String {
     let startDate = DateFormatter()
-    startDate.dateFormat = "M / d"
+    startDate.dateFormat = "MMM d"
     
     return startDate.string(from: self.startDate)
   }

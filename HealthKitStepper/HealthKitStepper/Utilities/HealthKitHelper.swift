@@ -13,7 +13,7 @@ import UIKit
 
 
 /// Constant used to create the starting date for the sample two weeks in the past
-let daysInSample = 14
+let kDaysInSample: Int = 14
 
 public class HealthKitHelper {
   
@@ -107,7 +107,7 @@ public class HealthKitHelper {
     
     let today = Date()
     let cal = Calendar(identifier: Calendar.Identifier.gregorian)
-    let startDate = cal.date(byAdding: .day, value: -daysInSample, to: today)!
+    let startDate = cal.date(byAdding: .day, value: -kDaysInSample, to: today)!
     
     let predicate = HKQuery.predicateForSamples(withStart: startDate,
                                                 end: Date(),

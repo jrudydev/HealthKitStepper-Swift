@@ -17,6 +17,7 @@
 		9314CAA924C19B9600EC5A65 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9314CAA824C19B9600EC5A65 /* SplashViewController.swift */; };
 		9314CAAC24C19CC400EC5A65 /* HealthKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9314CAAB24C19CC400EC5A65 /* HealthKitHelper.swift */; };
 		9314CAAF24C2936700EC5A65 /* StepsStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9314CAAE24C2936700EC5A65 /* StepsStatistic.swift */; };
+		9314CAB924C397B200EC5A65 /* StepsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9314CAB824C397B200EC5A65 /* StepsTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		9314CAA824C19B9600EC5A65 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		9314CAAB24C19CC400EC5A65 /* HealthKitHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitHelper.swift; sourceTree = "<group>"; };
 		9314CAAE24C2936700EC5A65 /* StepsStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsStatistic.swift; sourceTree = "<group>"; };
+		9314CAB824C397B200EC5A65 /* StepsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 		9314CAB124C31D3D00EC5A65 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9314CAB724C3979400EC5A65 /* Cells */,
 				9314CA9624C18F5C00EC5A65 /* Main.storyboard */,
 				9314CA9B24C18F5D00EC5A65 /* LaunchScreen.storyboard */,
 			);
@@ -136,6 +139,14 @@
 				9314CA9E24C18F5D00EC5A65 /* Info.plist */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		9314CAB724C3979400EC5A65 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				9314CAB824C397B200EC5A65 /* StepsTableViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -215,6 +226,7 @@
 				9314CA9324C18F5C00EC5A65 /* SceneDelegate.swift in Sources */,
 				9314CAAF24C2936700EC5A65 /* StepsStatistic.swift in Sources */,
 				9314CAA924C19B9600EC5A65 /* SplashViewController.swift in Sources */,
+				9314CAB924C397B200EC5A65 /* StepsTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
