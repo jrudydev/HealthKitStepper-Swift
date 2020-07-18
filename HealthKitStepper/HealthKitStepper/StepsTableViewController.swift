@@ -50,6 +50,7 @@ class StepsTableViewController: UITableViewController {
     
     self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
     self.tableView.dataSource = dataSource
+    self.tableView.allowsSelection = false
     
     let _ = HealthKitHelper.shared.$stepsResponse
       .subscribe(on: DispatchQueue.main)
