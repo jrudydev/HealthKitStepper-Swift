@@ -10,6 +10,7 @@ import UIKit
 import HealthKit
 
 class SplashViewController: UIViewController {
+  
   @IBOutlet weak var statusLabel: UILabel!
   
   override func viewDidLoad() {
@@ -43,10 +44,10 @@ class SplashViewController: UIViewController {
   
   @IBAction func didTapAuthorizeButton(_ sender: Any) {
     HealthKitHelper.shared.requestAuthorization() { [weak self] in
-//      DispatchQueue.main.async {
-//        let stepsVC = StepsTableViewController()
-//        self?.show(stepsVC, sender: self)
-//      }
+      DispatchQueue.main.async {
+        let stepsVC = StepsTableViewController()
+        self?.navigationController?.setViewControllers([stepsVC], animated: true)
+      }
     }
   }
 
