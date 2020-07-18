@@ -14,6 +14,8 @@ import UIKit
 
 public class HealthKitHelper {
   
+  public typealias StepStatistic = (startDate: Date, steps: Double)
+  
   /// Observable property that can be used to updated the UI.
   @Published public var authStatus = "Checking HealthKit authorization status..."
   
@@ -22,8 +24,8 @@ public class HealthKitHelper {
   
   private let healthStore = HKHealthStore()
   
-  /// The HealthKit data types we will request to read.
-  private let readTypes = Set([HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!])
+  /// The HealthKit data type we will request to read.
+  private let readStepCountType = HKObjectType.quantityType(forIdentifier: .stepCount)!
 
   private var hasRequestedData = false
   
@@ -36,7 +38,7 @@ public class HealthKitHelper {
   public func getAuthorizationStatus() {
     guard HKHealthStore.isHealthDataAvailable() else { self.dataNotAvailableBlock?(); return }
     
-    healthStore.getRequestStatusForAuthorization(toShare: [], read: readTypes) { (authorizationRequestStatus, error) in
+    healthStore.getRequestStatusForAuthorization(toShare: [], read: [readStepCountType]) { (authorizationRequestStatus, error) in
       
       var status: String = ""
       if let error = error {
@@ -68,7 +70,7 @@ public class HealthKitHelper {
     
     guard HKHealthStore.isHealthDataAvailable() else { self.dataNotAvailableBlock?(); return }
     
-    healthStore.requestAuthorization(toShare: [], read: readTypes) { (success, error) in
+    healthStore.requestAuthorization(toShare: [], read: [readStepCountType]) { (success, error) in
       var status: String = ""
       
       if let error = error {
@@ -92,6 +94,49 @@ public class HealthKitHelper {
       print(status)
       self.authStatus = status
     }
+  }
+  
+  public func retrieveStepCount(completion: @escaping ([StepStatistic], Error?) -> Void) {
+    print("Retrieving step count from HealthKit...")
+    
+    let today = Date()
+    let cal = Calendar(identifier: Calendar.Identifier.gregorian)
+    let startDate = cal.date(byAdding: .day, value: -7, to: today)!
+    
+    let predicate = HKQuery.predicateForSamples(withStart: startDate,
+                                                end: Date(),
+                                                options: .strictStartDate)
+    var interval = DateComponents()
+    interval.day = 1
+    let query = HKStatisticsCollectionQuery(quantityType: readStepCountType,
+                                            quantitySamplePredicate: predicate,
+                                            options: [.cumulativeSum],
+                                            anchorDate: startDate as Date,
+                                            intervalComponents:interval)
+    
+    query.initialResultsHandler = { query, results, error in
+      if let error = error { completion([], error); return }
+      
+      guard let results = results else { return }
+      
+      var resultsArray = [(Date, Double)]()
+      results.enumerateStatistics(from: startDate, to: today) {
+        statistics, stop in
+        
+        if let quantity = statistics.sumQuantity() {
+          let steps = quantity.doubleValue(for: HKUnit.count())
+          
+          print("Start Date: \(statistics.startDate), Steps = \(steps)")
+          
+          let readStepsResponseTuple = (statistics.startDate, steps)
+          resultsArray.append(readStepsResponseTuple)
+        }
+      }
+      
+      completion(resultsArray, nil)
+    }
+    
+    healthStore.execute(query)
   }
   
 }
