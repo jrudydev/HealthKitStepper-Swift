@@ -10,8 +10,17 @@ import UIKit
 
 class StepsTableViewController: UITableViewController {
   
-  private enum Section: CaseIterable {
+  internal enum Section: CaseIterable {
       case main
+  }
+  
+  private class StepsTableViewDiffableDataSource: UITableViewDiffableDataSource<Section, StepsStatistic> {
+      
+      override func tableView(_ tableView: UITableView,
+                              titleForHeaderInSection section: Int) -> String? {
+          return snapshot().sectionIdentifiers[section].title.uppercased()
+      }
+    
   }
   
   private let cellReuseIdentifier = "stepscell"
@@ -47,17 +56,18 @@ class StepsTableViewController: UITableViewController {
       .receive(on: DispatchQueue.main)
       .map { $0.map { StepsStatistic(startDate: $0.startDate, steps: Int($0.steps)) } }
       .sink { statistics in
+        self.tableView.reloadData()
         self.stepStatistics = statistics
       }
     
     HealthKitHelper.shared.retrieveStepCount() { error in
-      // show alert
+      // TODO: show alert
     }
   }
 
-  private func makeDataSource() -> UITableViewDiffableDataSource<Section, StepsStatistic> {
+  private func makeDataSource() -> StepsTableViewDiffableDataSource {
     let cellId = cellReuseIdentifier
-    return UITableViewDiffableDataSource(
+    return StepsTableViewDiffableDataSource(
       tableView: self.tableView,
       cellProvider: {  tableView, indexPath, statistic in
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellId)
@@ -77,5 +87,11 @@ class StepsTableViewController: UITableViewController {
 extension StepsTableViewController {
   @objc func orderButtonTapped() {
     HealthKitHelper.shared.toggleOrder()
+  }
+}
+
+extension StepsTableViewController.Section {
+  var title: String {
+    return HealthKitHelper.shared.isChronological ? "Today" : "Two weeks ago"
   }
 }

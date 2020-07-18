@@ -23,6 +23,12 @@ public class HealthKitHelper {
   /// Optional block that will exectute when HealthKit is not available
   public var dataNotAvailableBlock: (() -> Void)? = nil
   
+  public private (set) var isChronological = true {
+    didSet {
+      self.stepsResponse.reverse()
+    }
+  }
+  
   private let healthStore = HKHealthStore()
   
   /// The HealthKit data type we will request to read.
@@ -142,7 +148,7 @@ public class HealthKitHelper {
   }
   
   public func toggleOrder() {
-    self.stepsResponse.reverse()
+    self.isChronological.toggle()
   }
   
 }
