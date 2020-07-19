@@ -19,7 +19,7 @@ class StepsTableViewController: UITableViewController {
       var snapshot = NSDiffableDataSourceSnapshot<Section, StepsStatistic>()
       snapshot.appendSections(Section.allCases)
       snapshot.appendItems(self.stepStatistics, toSection: .main)
-
+print("snapshot created \(self.stepStatistics)")
       dataSource.apply(snapshot, animatingDifferences: true)
     }
   }
@@ -76,7 +76,7 @@ extension StepsTableViewController {
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { stats, today in
-        self.tableView.reloadData()
+        self.tableView.reloadData() // Done to reload the section header
 
         let statsForToday = StepsStatistic(startDate: Date(), steps: Int(today))
         let stepHistory = stats.map { StepsStatistic(startDate: $0.startDate, steps: Int($0.steps)) }
@@ -84,6 +84,22 @@ extension StepsTableViewController {
           [statsForToday] + stepHistory : stepHistory + [statsForToday]
         self.refreshControl?.endRefreshing()
     }
+    
+    let _ = HealthKitHelper.shared.$error
+      .compactMap { $0 }
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
+      .sink { error in
+        let alertController = UIAlertController(
+          title: "Health Data Unavailable",
+          message: "Unable to access health data. Check device capabilities. Error: \(error)",
+          preferredStyle: .alert)
+        let action = UIAlertAction(title: "Dismiss", style: .default)
+        
+        alertController.addAction(action)
+        
+        self.present(alertController, animated: true)
+      }
   }
   
   private func setupTableView() {

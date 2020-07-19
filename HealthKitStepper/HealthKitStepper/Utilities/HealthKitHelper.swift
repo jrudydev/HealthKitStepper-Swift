@@ -19,10 +19,11 @@ public class HealthKitHelper {
   
   public typealias StatisticResponse = (startDate: Date, steps: Double)
   
-  /// Observable properties that can be used to updated the UI.
+  /// Observable properties that can be used to update the UI.
   @Published public private (set) var authStatus = "Checking HealthKit authorization status..."
   @Published public private (set) var stepsForToday: Double = 0.0
   @Published public private (set) var stepHistory = [StatisticResponse]()
+  @Published public private (set) var error: Error? = nil
   
   /// Optional block that will exectute when HealthKit is not available
   public var dataNotAvailableBlock: (() -> Void)? = nil
@@ -121,9 +122,9 @@ public class HealthKitHelper {
                                             anchorDate: startDate as Date,
                                             intervalComponents:interval)
     
-    query.initialResultsHandler = { _, results, _ in
+    query.initialResultsHandler = { _, results, error in
       guard let results = results else {
-        // TODO: Handle potential errors
+        if let error = error { self.error = error }
         return
       }
       
@@ -157,8 +158,9 @@ public class HealthKitHelper {
                                                 end: now,
                                                 options: .strictStartDate)
     
-    let query = HKStatisticsQuery(quantityType: stepsQuantityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, _ in
+    let query = HKStatisticsQuery(quantityType: stepsQuantityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
       guard let result = result, let sum = result.sumQuantity() else {
+        if let error = error { self.error = error }
         self.stepsForToday = 0.0
         return
       }

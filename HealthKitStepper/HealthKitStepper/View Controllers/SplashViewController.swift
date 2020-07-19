@@ -21,7 +21,7 @@ class SplashViewController: UIViewController {
 
   private func setupHealthKit() {
     let _ = HealthKitHelper.shared.$authStatus
-      .subscribe(on: DispatchQueue.main)
+      .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { status in
         self.statusLabel?.text = status
