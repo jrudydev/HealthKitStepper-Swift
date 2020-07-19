@@ -22,9 +22,9 @@ class StepsTableViewCell: UITableViewCell {
   let dowBGView: UIView = {
     let view = UIView()
     view.translatesAutoresizingMaskIntoConstraints = false
-    view.backgroundColor = .label
+    view.backgroundColor = .gray
     view.clipsToBounds = true
-    view.layer.cornerRadius = 20.0
+    view.layer.cornerRadius = 30.0
     return view
   }()
   
@@ -32,7 +32,6 @@ class StepsTableViewCell: UITableViewCell {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
     label.textAlignment = .center
-    label.font = label.font.withSize(20.0)
     label.textColor = .white
     label.text = "Sun"
     return label
@@ -42,7 +41,7 @@ class StepsTableViewCell: UITableViewCell {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
     label.font = label.font.withSize(50.0)
-    label.textColor = .systemBlue// UIColor(displayP3Red: 13.0, green: 99.0, blue: 243.0, alpha: 1.0)
+    label.textColor = AppConstants.Colors.green
     label.text = "99999"
     return label
   }()
@@ -98,7 +97,7 @@ class StepsTableViewCell: UITableViewCell {
   }
   
   private func dowBGConstraints() -> [NSLayoutConstraint] {
-    let padding: CGFloat = 10.0
+    let padding: CGFloat = 20.0
     
     let leading = dowBGView.leadingAnchor.constraint(
       equalTo: dowContainer.leadingAnchor, constant: padding)
