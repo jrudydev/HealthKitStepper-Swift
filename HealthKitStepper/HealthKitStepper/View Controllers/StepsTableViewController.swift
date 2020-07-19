@@ -71,22 +71,26 @@ extension StepsTableViewController {
 
 extension StepsTableViewController {
   private func setupObservers() {
-    let _ = HealthKitHelper.shared.$stepsResponse
-      .subscribe(on: DispatchQueue.main)
+    let _ = HealthKitHelper.shared.$stepHistory
+      .combineLatest(HealthKitHelper.shared.$stepsForToday)
+      .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
-      .map { $0.map { StepsStatistic(startDate: $0.startDate, steps: Int($0.steps)) } }
-      .sink { statistics in
+      .sink { stats, today in
         self.tableView.reloadData()
-        self.stepStatistics = statistics
+
+        let statsForToday = StepsStatistic(startDate: Date(), steps: Int(today))
+        let stepHistory = stats.map { StepsStatistic(startDate: $0.startDate, steps: Int($0.steps)) }
+        self.stepStatistics = HealthKitHelper.shared.isChronological ?
+          [statsForToday] + stepHistory : stepHistory + [statsForToday]
         self.refreshControl?.endRefreshing()
-      }
+    }
   }
   
   private func setupTableView() {
     let orderButton = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"),
                                       style: .plain,
                                       target: self,
-                                      action:#selector(StepsTableViewController.orderButtonTapped))
+                                      action: #selector(StepsTableViewController.orderButtonTapped))
     self.navigationItem.rightBarButtonItem  = orderButton
     self.navigationController?.navigationBar.prefersLargeTitles = true
     
@@ -100,9 +104,8 @@ extension StepsTableViewController {
   }
   
   private func fetchSteps() {
-    HealthKitHelper.shared.retrieveStepCount() { error in
-      // TODO: show alert
-    }
+    HealthKitHelper.shared.getTodaysSteps()
+    HealthKitHelper.shared.getStepHistory()
   }
 }
 

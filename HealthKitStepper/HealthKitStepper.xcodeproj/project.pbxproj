@@ -75,8 +75,8 @@
 				9314CAAD24C2933700EC5A65 /* Models */,
 				9314CAB124C31D3D00EC5A65 /* Views */,
 				9314CAB024C31CD600EC5A65 /* View Controllers */,
-				9314CAB424C31DCF00EC5A65 /* Resources */,
 				9314CAAA24C19C9D00EC5A65 /* Utilities */,
+				9314CAB424C31DCF00EC5A65 /* Resources */,
 			);
 			path = HealthKitStepper;
 			sourceTree = "<group>";

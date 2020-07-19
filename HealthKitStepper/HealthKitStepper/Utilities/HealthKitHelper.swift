@@ -12,8 +12,8 @@ import Combine
 import UIKit
 
 
-/// Constant used to create the starting date for the sample two weeks in the past
-let kDaysInSample: Int = 14
+/// Constant used to create the starting date for the sample two weeks in the past excluding current day
+let kDaysInSample: Int = 13
 
 public class HealthKitHelper {
   
@@ -21,7 +21,8 @@ public class HealthKitHelper {
   
   /// Observable properties that can be used to updated the UI.
   @Published public private (set) var authStatus = "Checking HealthKit authorization status..."
-  @Published public private (set) var stepsResponse = [StatisticResponse]()
+  @Published public private (set) var stepsForToday: Double = 0.0
+  @Published public private (set) var stepHistory = [StatisticResponse]()
   
   /// Optional block that will exectute when HealthKit is not available
   public var dataNotAvailableBlock: (() -> Void)? = nil
@@ -102,16 +103,16 @@ public class HealthKitHelper {
     }
   }
   
-  public func retrieveStepCount(completion: @escaping (Error?) -> Void) {
+  public func getStepHistory() {
     print("Retrieving step count from HealthKit...")
     
-    let today = Date()
-    let cal = Calendar(identifier: Calendar.Identifier.gregorian)
-    let startDate = cal.date(byAdding: .day, value: -kDaysInSample, to: today)!
-    
+    let now = Date()
+    let endDate = Calendar.current.startOfDay(for: now)
+    let startDate = Calendar.current.date(byAdding: .day, value: -kDaysInSample, to: endDate)!
     let predicate = HKQuery.predicateForSamples(withStart: startDate,
-                                                end: Date(),
+                                                end: endDate,
                                                 options: .strictStartDate)
+    
     var interval = DateComponents()
     interval.day = 1
     let query = HKStatisticsCollectionQuery(quantityType: readStepCountType,
@@ -120,13 +121,14 @@ public class HealthKitHelper {
                                             anchorDate: startDate as Date,
                                             intervalComponents:interval)
     
-    query.initialResultsHandler = { query, results, error in
-      if let error = error { completion(error); return }
-      
-      guard let results = results else { return }
+    query.initialResultsHandler = { _, results, _ in
+      guard let results = results else {
+        // TODO: Handle potential errors
+        return
+      }
       
       var resultsArray = [(Date, Double)]()
-      results.enumerateStatistics(from: startDate, to: today) {
+      results.enumerateStatistics(from: startDate, to: now) {
         statistics, stop in
         
         if let quantity = statistics.sumQuantity() {
@@ -139,16 +141,36 @@ public class HealthKitHelper {
         }
       }
       
-      self.stepsResponse = resultsArray.reversed()
+      self.stepHistory = resultsArray.reversed()
       self.isChronological = true
-      completion(nil)
     }
     
-    healthStore.execute(query)
+    self.healthStore.execute(query)
+  }
+  
+  public func getTodaysSteps() {
+    let stepsQuantityType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+    
+    let now = Date()
+    let startOfDay = Calendar.current.startOfDay(for: now)
+    let predicate = HKQuery.predicateForSamples(withStart: startOfDay,
+                                                end: now,
+                                                options: .strictStartDate)
+    
+    let query = HKStatisticsQuery(quantityType: stepsQuantityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, _ in
+      guard let result = result, let sum = result.sumQuantity() else {
+        self.stepsForToday = 0.0
+        return
+      }
+      
+      self.stepsForToday = sum.doubleValue(for: HKUnit.count())
+    }
+    
+    self.healthStore.execute(query)
   }
   
   public func toggleOrder() {
-    self.stepsResponse.reverse()
+    self.stepHistory.reverse()
     self.isChronological.toggle()
   }
   
