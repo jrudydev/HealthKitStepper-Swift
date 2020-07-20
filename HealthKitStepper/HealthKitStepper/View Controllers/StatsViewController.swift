@@ -41,7 +41,7 @@ class StatsViewController: UIViewController, UITableViewDelegate {
     self.setupTableView()
     self.setupObservers()
     
-    self.fetchSteps()
+    self.viewModel.fetchStats()
   }
   
 }
@@ -124,19 +124,15 @@ extension StatsViewController {
     refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
     self.refreshControl = refreshControl
   }
-  
-  private func fetchSteps() {
-    viewModel.fetchStats()
-  }
 }
 
 extension StatsViewController {
   @objc func orderButtonTapped() {
-    viewModel.toggleOrder()
+    self.viewModel.toggleOrder()
   }
   
   @objc func refresh(_ sender: AnyObject) {
-    self.fetchSteps()
+    self.viewModel.fetchStats()
   }
 }
 
