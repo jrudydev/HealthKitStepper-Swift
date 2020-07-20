@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		9314CA9124C18F5C00EC5A65 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9314CA9024C18F5C00EC5A65 /* AppDelegate.swift */; };
 		9314CA9324C18F5C00EC5A65 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9314CA9224C18F5C00EC5A65 /* SceneDelegate.swift */; };
-		9314CA9524C18F5C00EC5A65 /* StepsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9314CA9424C18F5C00EC5A65 /* StepsTableViewController.swift */; };
 		9314CA9824C18F5C00EC5A65 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9314CA9624C18F5C00EC5A65 /* Main.storyboard */; };
 		9314CA9A24C18F5D00EC5A65 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9314CA9924C18F5D00EC5A65 /* Assets.xcassets */; };
 		9314CA9D24C18F5D00EC5A65 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9314CA9B24C18F5D00EC5A65 /* LaunchScreen.storyboard */; };
@@ -27,7 +26,6 @@
 		9314CA8D24C18F5B00EC5A65 /* HealthKitStepper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthKitStepper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9314CA9024C18F5C00EC5A65 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9314CA9224C18F5C00EC5A65 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		9314CA9424C18F5C00EC5A65 /* StepsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsTableViewController.swift; sourceTree = "<group>"; };
 		9314CA9724C18F5C00EC5A65 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9314CA9924C18F5D00EC5A65 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9314CA9C24C18F5D00EC5A65 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -115,7 +113,6 @@
 			isa = PBXGroup;
 			children = (
 				9314CAA824C19B9600EC5A65 /* SplashViewController.swift */,
-				9314CA9424C18F5C00EC5A65 /* StepsTableViewController.swift */,
 				93482E9424C585C500947C21 /* StatsViewController.swift */,
 			);
 			path = "View Controllers";
@@ -247,7 +244,6 @@
 			files = (
 				93482E9924C5948700947C21 /* StatsViewModel.swift in Sources */,
 				9314CAAC24C19CC400EC5A65 /* HealthKitHelper.swift in Sources */,
-				9314CA9524C18F5C00EC5A65 /* StepsTableViewController.swift in Sources */,
 				9314CA9124C18F5C00EC5A65 /* AppDelegate.swift in Sources */,
 				9314CA9324C18F5C00EC5A65 /* SceneDelegate.swift in Sources */,
 				9314CAAF24C2936700EC5A65 /* StepsStatistic.swift in Sources */,
