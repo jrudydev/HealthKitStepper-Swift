@@ -27,6 +27,8 @@ class StatsViewController: UIViewController, UITableViewDelegate {
     }
   }
   
+  private let viewModel = StatsViewModel()
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -47,7 +49,8 @@ extension StatsViewController {
     
     override func tableView(_ tableView: UITableView,
                             titleForHeaderInSection section: Int) -> String? {
-      return snapshot().sectionIdentifiers[section].title.uppercased()
+//      let title = HealthKitHelper.shared.isChronological ? "Today" : "Two weeks ago"
+      return "yesterday".uppercased()
     }
   }
   
@@ -72,8 +75,8 @@ extension StatsViewController {
 
 extension StatsViewController {
   private func setupObservers() {
-    let _ = HealthKitHelper.shared.$stepHistory
-      .combineLatest(HealthKitHelper.shared.$stepsForToday)
+    let _ = viewModel.$stepHistory
+      .combineLatest(viewModel.$stepsForToday)
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { stats, today in
@@ -81,12 +84,12 @@ extension StatsViewController {
 
         let statsForToday = StepsStatistic(startDate: Date(), steps: Int(today))
         let stepHistory = stats.map { StepsStatistic(startDate: $0.startDate, steps: Int($0.steps)) }
-        self.stepStatistics = HealthKitHelper.shared.isChronological ?
+        self.stepStatistics = self.viewModel.isChronological ?
           [statsForToday] + stepHistory : stepHistory + [statsForToday]
         self.refreshControl?.endRefreshing()
     }
     
-    let _ = HealthKitHelper.shared.$error
+    let _ = viewModel.$error
       .compactMap { $0 }
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
@@ -109,7 +112,7 @@ extension StatsViewController {
     let orderButton = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"),
                                       style: .plain,
                                       target: self,
-                                      action: #selector(StepsTableViewController.orderButtonTapped))
+                                      action: #selector(StatsViewController.orderButtonTapped))
     self.navigationItem.rightBarButtonItem  = orderButton
     self.navigationController?.navigationBar.prefersLargeTitles = true
     
@@ -123,24 +126,17 @@ extension StatsViewController {
   }
   
   private func fetchSteps() {
-    HealthKitHelper.shared.getTodaysSteps()
-    HealthKitHelper.shared.getStepHistory()
+    viewModel.fetchStats()
   }
 }
 
 extension StatsViewController {
   @objc func orderButtonTapped() {
-    HealthKitHelper.shared.toggleOrder()
+    viewModel.toggleOrder()
   }
   
   @objc func refresh(_ sender: AnyObject) {
     self.fetchSteps()
-  }
-}
-
-extension StatsViewController.Section {
-  var title: String {
-    return HealthKitHelper.shared.isChronological ? "Today" : "Two weeks ago"
   }
 }
 

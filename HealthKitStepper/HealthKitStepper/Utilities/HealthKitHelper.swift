@@ -21,15 +21,10 @@ public class HealthKitHelper {
   
   /// Observable properties that can be used to update the UI.
   @Published public private (set) var authStatus = "Checking HealthKit authorization status..."
-  @Published public private (set) var stepsForToday: Double = 0.0
-  @Published public private (set) var stepHistory = [StatisticResponse]()
-  @Published public private (set) var error: Error? = nil
   
   /// Optional block that will exectute when HealthKit is not available
   public var dataNotAvailableBlock: (() -> Void)? = nil
-  
-  public private (set) var isChronological = true
-  
+
   private let healthStore = HKHealthStore()
   
   /// The HealthKit data type we will request to read.
@@ -104,7 +99,7 @@ public class HealthKitHelper {
     }
   }
   
-  public func getStepHistory() {
+  public func getStepHistory(completion: @escaping ([StepsStatistic], Error?) -> Void) {
     print("Retrieving step count from HealthKit...")
     
     let now = Date()
@@ -124,7 +119,7 @@ public class HealthKitHelper {
     
     query.initialResultsHandler = { _, results, error in
       guard let results = results else {
-        if let error = error { self.error = error }
+        if let error = error { completion([], error) }
         return
       }
       
@@ -141,15 +136,12 @@ public class HealthKitHelper {
           resultsArray.append(readStepsResponseTuple)
         }
       }
-      
-      self.stepHistory = resultsArray.reversed()
-      self.isChronological = true
     }
     
     self.healthStore.execute(query)
   }
   
-  public func getTodaysSteps() {
+  public func getTodaysSteps(completion: @escaping  (Double, Error?) -> Void) {
     let stepsQuantityType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
     
     let now = Date()
@@ -160,20 +152,13 @@ public class HealthKitHelper {
     
     let query = HKStatisticsQuery(quantityType: stepsQuantityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
       guard let result = result, let sum = result.sumQuantity() else {
-        if let error = error { self.error = error }
-        self.stepsForToday = 0.0
+        if let error = error { completion(0.0, error) }
         return
       }
-      
-      self.stepsForToday = sum.doubleValue(for: HKUnit.count())
+      completion(sum.doubleValue(for: HKUnit.count()), nil)
     }
     
     self.healthStore.execute(query)
-  }
-  
-  public func toggleOrder() {
-    self.stepHistory.reverse()
-    self.isChronological.toggle()
   }
   
 }

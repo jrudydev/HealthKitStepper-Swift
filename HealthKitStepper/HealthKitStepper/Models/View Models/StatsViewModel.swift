@@ -16,7 +16,6 @@ let kDebounceThreshold: Int = 3
 
 /// This protocol defines a method that fetches the data, the response should be observed by the view controller
 protocol StatsDataSource {
-  var authStatus: String { get set }
   var stepsForToday: Double { get set }
   var stepHistory: [StepsStatistic] { get set }
   var error: Error? { get set }
@@ -38,7 +37,6 @@ class StatsViewModel {
   }
   
   /// Observable properties that can be used to update the UI.
-  @Published public internal (set) var authStatus = "Checking HealthKit authorization status..."
   @Published public internal (set) var stepsForToday: Double = 0
   @Published public internal (set) var stepHistory = [StepsStatistic]()
   @Published public internal (set) var error: Error? = nil
@@ -53,12 +51,24 @@ class StatsViewModel {
     }
   }
   
-  internal var fetchBlock: () -> Void = {
+  internal var fetchBlock: () -> Void {
     return {
-      HealthKitHelper.shared.getTodaysSteps()
-      HealthKitHelper.shared.getStepHistory()
+      HealthKitHelper.shared.getTodaysSteps() { steps, error in
+        self.stepsForToday = 0.0
+      }
+      HealthKitHelper.shared.getStepHistory() { result, error in
+        guard error != nil else { self.error = error!; return }
+        
+        self.stepHistory = result.reversed()
+        self.isChronological = true
+      }
     }
-  }()
+  }
+  
+  public func toggleOrder() {
+    self.stepHistory.reverse()
+    self.isChronological.toggle()
+  }
 }
 
 extension StatsViewModel: StatsDataSource {

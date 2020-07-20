@@ -8,17 +8,17 @@
 
 import Foundation
 
-struct StepsStatistic: Hashable {
+public struct StepsStatistic: Hashable {
   let startDate: Date
   let steps: Int
 }
 
 extension StepsStatistic: Comparable {
-  static func ==(lhs: StepsStatistic, rhs: StepsStatistic) -> Bool {
+  public static func ==(lhs: StepsStatistic, rhs: StepsStatistic) -> Bool {
     return lhs.steps == rhs.steps
   }
   
-  static func <(lhs: StepsStatistic, rhs: StepsStatistic) -> Bool {
+  public static func <(lhs: StepsStatistic, rhs: StepsStatistic) -> Bool {
     return lhs.steps == rhs.steps
   }
 }
