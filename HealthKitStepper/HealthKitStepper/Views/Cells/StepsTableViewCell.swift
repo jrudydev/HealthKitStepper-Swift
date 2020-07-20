@@ -32,7 +32,7 @@ class StepsTableViewCell: UITableViewCell {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
     label.textAlignment = .center
-    label.textColor = .white
+    label.textColor = .label
     label.text = "Sun"
     return label
   }()
@@ -150,7 +150,7 @@ class StepsTableViewCell: UITableViewCell {
 extension StepsTableViewCell {
   public func setData(statistic: StepsStatistic) {
     self.dowLabel.text = statistic.dayOfWeekLabel
-    self.stepsLabel.text = "\(statistic.steps)"
+    self.stepsLabel.text = "\(statistic.steps.shortString)"
     self.dateLabel.text = statistic.startDateLabel
   }
 }

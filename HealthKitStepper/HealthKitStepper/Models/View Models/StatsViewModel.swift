@@ -14,6 +14,9 @@ import Combine
 let kDebounceThreshold: Int = 3
 let kRefreshRate: Double = 60.0
 
+let kStepsFormat: String = "%.2f"
+let kStepsMaxInteger: Int = 99999
+
 /// This protocol defines a method to fetch data, the properties should be observed by the view controller
 protocol StatsDataSource {
   var stepsForToday: Double { get set }
@@ -124,12 +127,21 @@ extension StatsViewModel: StatsDataSource {
   }
 }
 
+extension Int {
+  var shortString: String {
+    guard self > kStepsMaxInteger else { return "\(self)" }
+    
+    let newUnitvalue = Double(self) / 1000
+    return String(format: kStepsFormat, newUnitvalue)
+  }
+}
+
 extension Double {
   var shortString: String {
-    guard self > 99999 else { return String(format: "%.0f", self) }
+    guard self > Double(kStepsMaxInteger) else { return String(format: "%.0f", self) }
     
     let newUnitvalue = self / 1000
-    return String(format: "%.2f", newUnitvalue)
+    return String(format: kStepsFormat, newUnitvalue)
   }
 }
 
