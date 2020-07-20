@@ -10,11 +10,11 @@ import Foundation
 import Combine
 
 
-/// This value is used to debounce the request to the datasouce
+/// These values are used to send and debounce debounce requests to the datasouce
 let kDebounceThreshold: Int = 3
+let kRefreshRate: Double = 60.0
 
-
-/// This protocol defines a method that fetches the data, the response should be observed by the view controller
+/// This protocol defines a method to fetch data, the properties should be observed by the view controller
 protocol StatsDataSource {
   var stepsForToday: Double { get set }
   var stepHistory: [StepsStatistic] { get set }
@@ -45,10 +45,20 @@ class StatsViewModel {
   
   private var lastFetched: Date? = nil
   
+  private var subscriptions = Set<AnyCancellable>()
+  
   init() {
     HealthKitHelper.shared.dataNotAvailableBlock = { [weak self] in
       self?.error = StatsError.noPermission
     }
+    
+    let _ = Timer.publish(every: kRefreshRate, on: RunLoop.main, in: .common)
+      .autoconnect()
+      .sink { _ in
+        print("Refreshing steps...")
+        self.fetchStats()
+      }
+      .store(in: &subscriptions)
   }
   
   internal var fetchBlock: () -> Void {

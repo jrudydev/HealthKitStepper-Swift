@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 
 class StatsViewController: UIViewController, UITableViewDelegate {
   
@@ -31,6 +32,8 @@ class StatsViewController: UIViewController, UITableViewDelegate {
   }
   
   private let viewModel = StatsViewModel()
+  
+  private var subscriptions = Set<AnyCancellable>()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -82,7 +85,8 @@ extension StatsViewController {
         self.stepStatistics = stats
         
         self.refreshControl?.endRefreshing()
-    }
+      }
+      .store(in: &subscriptions)
     
     let _ = viewModel.$error
       .compactMap { $0 }
@@ -99,6 +103,7 @@ extension StatsViewController {
         
         self.present(alertController, animated: true)
       }
+      .store(in: &subscriptions)
   }
   
   private func setupTableView() {
