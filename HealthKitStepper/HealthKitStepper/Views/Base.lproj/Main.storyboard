@@ -53,7 +53,7 @@
         <!--Steps-->
         <scene sceneID="v8A-M5-Tll">
             <objects>
-                <viewController id="c9I-lU-0aD" sceneMemberID="viewController">
+                <viewController id="c9I-lU-0aD" customClass="StatsViewController" customModule="HealthKitStepper" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="q8m-OO-mDf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -133,6 +133,9 @@
                     </view>
                     <navigationItem key="navigationItem" title="Steps" id="KxS-AT-y7H"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="tableView" destination="Tjc-66-cKM" id="TXD-BV-azZ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="54r-i4-dq3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
