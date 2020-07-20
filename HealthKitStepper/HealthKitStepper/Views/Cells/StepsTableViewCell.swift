@@ -22,7 +22,7 @@ class StepsTableViewCell: UITableViewCell {
   let dowBGView: UIView = {
     let view = UIView()
     view.translatesAutoresizingMaskIntoConstraints = false
-    view.backgroundColor = .gray
+    view.backgroundColor = .systemGray3
     view.clipsToBounds = true
     view.layer.cornerRadius = 30.0
     return view
