@@ -54,10 +54,12 @@ class StatsViewModel {
   internal var fetchBlock: () -> Void {
     return {
       HealthKitHelper.shared.getTodaysSteps() { steps, error in
-        self.stepsForToday = 0.0
+        guard error == nil else { self.error = error!; return }
+        
+        self.stepsForToday = steps
       }
       HealthKitHelper.shared.getStepHistory() { result, error in
-        guard error != nil else { self.error = error!; return }
+        guard error == nil else { self.error = error!; return }
         
         self.stepHistory = result.reversed()
         self.isChronological = true
@@ -73,6 +75,8 @@ class StatsViewModel {
 
 extension StatsViewModel: StatsDataSource {
   public var dailyAvg: Double {
+    guard self.stepHistory.count > 0 else { return 0.0 }
+    
     let total: Int = self.stepHistory.reduce(0) { $0 + $1.steps }
     return Double(total) / Double(self.stepHistory.count)
   }
@@ -112,10 +116,10 @@ extension StatsViewModel: StatsDataSource {
 
 extension Double {
   var shortString: String {
-    guard self > 99999 else { return String(format: "%.0", self) }
+    guard self > 99999 else { return String(format: "%.0f", self) }
     
     let newUnitvalue = self / 1000
-    return String(format: "%.2", newUnitvalue)
+    return String(format: "%.2f", newUnitvalue)
   }
 }
 

@@ -123,7 +123,7 @@ public class HealthKitHelper {
         return
       }
       
-      var resultsArray = [(Date, Double)]()
+      var resultsArray = [StepsStatistic]()
       results.enumerateStatistics(from: startDate, to: now) {
         statistics, stop in
         
@@ -131,11 +131,14 @@ public class HealthKitHelper {
           let steps = quantity.doubleValue(for: HKUnit.count())
           
           print("Start Date: \(statistics.startDate), Steps = \(steps)")
-          
-          let readStepsResponseTuple = (statistics.startDate, steps)
-          resultsArray.append(readStepsResponseTuple)
+        
+          let stat = StepsStatistic(startDate: statistics.startDate,
+                                    steps: Int(steps))
+          resultsArray.append(stat)
         }
       }
+    
+      completion(resultsArray, nil)
     }
     
     self.healthStore.execute(query)
@@ -155,6 +158,7 @@ public class HealthKitHelper {
         if let error = error { completion(0.0, error) }
         return
       }
+      
       completion(sum.doubleValue(for: HKUnit.count()), nil)
     }
     

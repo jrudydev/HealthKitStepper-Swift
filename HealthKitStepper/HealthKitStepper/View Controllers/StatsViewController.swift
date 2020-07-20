@@ -11,6 +11,9 @@ import UIKit
 class StatsViewController: UIViewController, UITableViewDelegate {
   
   @IBOutlet weak var tableView: UITableView!
+  @IBOutlet weak var stepsLabel: UILabel!
+  @IBOutlet weak var historyLabel: UILabel!
+  @IBOutlet weak var metricLabel: UILabel!
   
   private let cellReuseIdentifier = "stepscell"
   private lazy var dataSource = makeDataSource()
@@ -45,22 +48,13 @@ extension StatsViewController {
     case main
   }
   
-  private class StepsTableViewDiffableDataSource: UITableViewDiffableDataSource<Section, StepsStatistic> {
-    
-    override func tableView(_ tableView: UITableView,
-                            titleForHeaderInSection section: Int) -> String? {
-//      let title = HealthKitHelper.shared.isChronological ? "Today" : "Two weeks ago"
-      return "yesterday".uppercased()
-    }
-  }
-  
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
       return kStepCellHeight
   }
   
-  private func makeDataSource() -> StepsTableViewDiffableDataSource {
+  private func makeDataSource() -> UITableViewDiffableDataSource<Section, StepsStatistic> {
     let cellId = cellReuseIdentifier
-    return StepsTableViewDiffableDataSource(
+    return UITableViewDiffableDataSource(
       tableView: self.tableView,
       cellProvider: {  tableView, indexPath, statistic in
         let cell = self.tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
@@ -80,12 +74,13 @@ extension StatsViewController {
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { stats, today in
-        self.tableView.reloadData() // Done to reload the section header
-
-        let statsForToday = StepsStatistic(startDate: Date(), steps: Int(today))
-        let stepHistory = stats.map { StepsStatistic(startDate: $0.startDate, steps: Int($0.steps)) }
-        self.stepStatistics = self.viewModel.isChronological ?
-          [statsForToday] + stepHistory : stepHistory + [statsForToday]
+        let historyTitle = self.viewModel.isChronological ? "Yesterday" : "Two weeks ago"
+        self.historyLabel?.text = historyTitle
+        self.metricLabel?.text = "Average: \(self.viewModel.dailyAvg.shortString)"
+        
+        self.stepsLabel?.text = "\(today.shortString)"
+        self.stepStatistics = stats
+        
         self.refreshControl?.endRefreshing()
     }
     
