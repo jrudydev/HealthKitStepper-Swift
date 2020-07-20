@@ -13,18 +13,12 @@ struct StepsStatistic: Hashable {
   let steps: Int
 }
 
-extension StepsStatistic {
-  var startDateLabel: String {
-    let startDate = DateFormatter()
-    startDate.dateFormat = "MMM d"
-    
-    return startDate.string(from: self.startDate)
+extension StepsStatistic: Comparable {
+  static func ==(lhs: StepsStatistic, rhs: StepsStatistic) -> Bool {
+    return lhs.steps == rhs.steps
   }
   
-  var dayOfWeekLabel: String {
-    let dow = DateFormatter()
-    dow.dateFormat = "E"
-    
-    return dow.string(from: self.startDate)
+  static func <(lhs: StepsStatistic, rhs: StepsStatistic) -> Bool {
+    return lhs.steps == rhs.steps
   }
 }

@@ -18,8 +18,8 @@ protocol StatsDataSource {
   var error: Error? { get set }
   
   var dailyAvg: Double { get }
-  var dailyMin: Double { get }
-  var dailyMax: Double { get }
+  var dailyMin: Int { get }
+  var dailyMax: Int { get }
   
   func fetchStats()
 }
@@ -50,13 +50,16 @@ class StatsViewModel {
 
 extension StatsViewModel: StatsDataSource {
   public var dailyAvg: Double {
-    return 0.0
+    let total: Int = self.stepHistory.reduce(0) { $0 + $1.steps }
+    return Double(total) / Double(self.stepHistory.count)
   }
-  public var dailyMin: Double {
-    return 0.0
+  
+  public var dailyMin: Int {
+    return self.stepHistory.min()?.steps ?? 0
   }
-  public var dailyMax: Double {
-    return 0.0
+  
+  public var dailyMax: Int {
+    return self.stepHistory.max()?.steps ?? 0
   }
   
   public func authorize() {
@@ -75,5 +78,21 @@ extension Double {
     
     let newUnitvalue = self / 1000
     return String(format: "%.2", newUnitvalue)
+  }
+}
+
+extension StepsStatistic {
+  var startDateLabel: String {
+    let startDate = DateFormatter()
+    startDate.dateFormat = "MMM d"
+    
+    return startDate.string(from: self.startDate)
+  }
+  
+  var dayOfWeekLabel: String {
+    let dow = DateFormatter()
+    dow.dateFormat = "E"
+    
+    return dow.string(from: self.startDate)
   }
 }
