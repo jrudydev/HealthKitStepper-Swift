@@ -10,6 +10,10 @@ import Foundation
 import Combine
 
 
+/// This value is used to debounce the request to the datasouce
+let kDebounceThreshold: Int = 3
+
+
 /// This protocol defines a method that fetches the data, the response should be observed by the view controller
 protocol StatsDataSource {
   var authStatus: String { get set }
@@ -41,11 +45,20 @@ class StatsViewModel {
   
   public private (set) var isChronological = true
   
+  private var lastFetched: Date? = nil
+  
   init() {
     HealthKitHelper.shared.dataNotAvailableBlock = { [weak self] in
       self?.error = StatsError.noPermission
     }
   }
+  
+  internal var fetchBlock: () -> Void = {
+    return {
+      HealthKitHelper.shared.getTodaysSteps()
+      HealthKitHelper.shared.getStepHistory()
+    }
+  }()
 }
 
 extension StatsViewModel: StatsDataSource {
@@ -67,8 +80,23 @@ extension StatsViewModel: StatsDataSource {
   }
   
   public func fetchStats() {
-//    HealthKitHelper.shared.getTodaysSteps()
-//    HealthKitHelper.shared.getStepHistory()
+    self.fetchStatsIfNeeded()
+  }
+
+  private func fetchStatsIfNeeded() {
+    guard let lastFetched = self.lastFetched else {
+      self.fetchBlock()
+      self.lastFetched = Date()
+      return
+    }
+    
+    let debounceCutoff = Calendar.current.date(byAdding: .second,
+                                               value: kDebounceThreshold,
+                                               to: lastFetched)!
+    guard Date() > debounceCutoff else { return }
+    
+    self.fetchBlock()
+    self.lastFetched = Date()
   }
 }
 
