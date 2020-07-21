@@ -39,6 +39,28 @@ class StatsViewModel {
     case readError
   }
   
+  enum Metric {
+    case min
+    case max
+    case avg
+    
+    var prev: Metric {
+      switch self {
+      case .min: return .avg
+      case .max: return .min
+      case .avg: return .max
+      }
+    }
+    
+    var next: Metric {
+      switch self {
+      case .min: return .max
+      case .max: return .avg
+      case .avg: return .min
+      }
+    }
+  }
+  
   /// Observable properties that can be used to update the UI.
   @Published public internal (set) var stepsForToday: Double = 0
   @Published public internal (set) var stepHistory = [StepsStatistic]()
@@ -47,6 +69,7 @@ class StatsViewModel {
   public private (set) var isChronological = true
   
   private var lastFetched: Date? = nil
+  public private (set) var currentMetric: Metric = .avg
   
   private var subscriptions = Set<AnyCancellable>()
   
@@ -78,6 +101,22 @@ class StatsViewModel {
         self.isChronological = true
       }
     }
+  }
+  
+  public var metricLabel: String {
+    switch self.currentMetric {
+    case .min: return "Minimum: \(self.dailyMin.shortString)"
+    case .max: return "Maximum: \(self.dailyMax.shortString)"
+    case .avg: return "Average: \(self.dailyAvg.shortString)"
+    }
+  }
+  
+  public func prevMetricTapped() {
+    self.currentMetric = self.currentMetric.prev
+  }
+  
+  public func nextMetricTapped() {
+    self.currentMetric = self.currentMetric.next
   }
   
   public func toggleOrder() {

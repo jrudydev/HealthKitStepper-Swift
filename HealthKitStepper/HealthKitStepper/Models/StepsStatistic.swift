@@ -19,6 +19,6 @@ extension StepsStatistic: Comparable {
   }
   
   public static func <(lhs: StepsStatistic, rhs: StepsStatistic) -> Bool {
-    return lhs.steps == rhs.steps
+    return lhs.steps < rhs.steps
   }
 }

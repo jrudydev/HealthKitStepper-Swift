@@ -119,16 +119,41 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aRE-Mr-Kkp">
                                 <rect key="frame" x="0.0" y="718" width="375" height="60"/>
                                 <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rag-M7-fxb">
+                                        <rect key="frame" x="20" y="8" width="30" height="44"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                        <state key="normal" title="&lt;">
+                                            <color key="titleColor" cocoaTouchSystemColor="lightTextColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="metricNavLeftTap:" destination="c9I-lU-0aD" eventType="touchUpInside" id="jkO-9G-kzq"/>
+                                        </connections>
+                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Average: 1000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Whl-w1-Snw">
                                         <rect key="frame" x="105" y="14" width="165" height="32"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                         <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HUK-so-FiS">
+                                        <rect key="frame" x="325" y="8" width="30" height="44"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                        <state key="normal" title="&gt;">
+                                            <color key="titleColor" cocoaTouchSystemColor="lightTextColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="metricNavRightTap:" destination="c9I-lU-0aD" eventType="touchUpInside" id="TdT-1n-4Ew"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="rag-M7-fxb" firstAttribute="leading" secondItem="aRE-Mr-Kkp" secondAttribute="leading" constant="20" id="0vv-Gk-bw8"/>
                                     <constraint firstItem="Whl-w1-Snw" firstAttribute="centerY" secondItem="aRE-Mr-Kkp" secondAttribute="centerY" id="Ucu-zJ-Mac"/>
                                     <constraint firstAttribute="height" constant="60" id="YVQ-0w-5gx"/>
+                                    <constraint firstAttribute="trailing" secondItem="HUK-so-FiS" secondAttribute="trailing" constant="20" id="ZD4-5n-paE"/>
+                                    <constraint firstItem="HUK-so-FiS" firstAttribute="centerY" secondItem="aRE-Mr-Kkp" secondAttribute="centerY" id="gpj-iN-TMW"/>
+                                    <constraint firstItem="rag-M7-fxb" firstAttribute="centerY" secondItem="aRE-Mr-Kkp" secondAttribute="centerY" id="lvu-Rq-MiX"/>
                                     <constraint firstItem="Whl-w1-Snw" firstAttribute="centerX" secondItem="aRE-Mr-Kkp" secondAttribute="centerX" id="tkz-Cl-N7n"/>
                                 </constraints>
                             </view>

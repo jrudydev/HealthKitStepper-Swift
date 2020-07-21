@@ -20,8 +20,6 @@ class StatsViewController: UIViewController, UITableViewDelegate {
   private let cellReuseIdentifier = "stepscell"
   private lazy var dataSource = makeDataSource()
   
-  private var refreshControl = UIRefreshControl()
-  
   private var stepStatistics = [StepsStatistic]() {
     didSet {
       var snapshot = NSDiffableDataSourceSnapshot<Section, StepsStatistic>()
@@ -40,6 +38,7 @@ class StatsViewController: UIViewController, UITableViewDelegate {
       }
     }
   }
+  private var refreshControl = UIRefreshControl()
   
   private var subscriptions = Set<AnyCancellable>()
   
@@ -51,6 +50,30 @@ class StatsViewController: UIViewController, UITableViewDelegate {
     self.setupObservers()
     
     self.fetchAndCleanUp()
+  }
+  
+  @IBAction func metricNavLeftTap(_ sender: Any) {
+    guard let label = self.metricLabel else { return }
+    
+    self.viewModel.prevMetricTapped()
+    UIView.transition(with: label,
+                      duration: 0.25,
+                      options: .transitionCrossDissolve,
+                      animations: { [weak self] in
+                        self?.metricLabel?.text = self?.viewModel.metricLabel },
+                      completion: nil)
+  }
+  
+  @IBAction func metricNavRightTap(_ sender: Any) {
+    guard let label = self.metricLabel else { return }
+    
+    self.viewModel.nextMetricTapped()
+    UIView.transition(with: label,
+                      duration: 0.25,
+                      options: .transitionCrossDissolve,
+                      animations: { [weak self] in
+                        self?.metricLabel?.text = self?.viewModel.metricLabel },
+                      completion: nil)
   }
   
 }
@@ -98,7 +121,7 @@ extension StatsViewController {
       .sink { stats, today in
         let historyTitle = self.viewModel.isChronological ? "Yesterday" : "Two weeks ago"
         self.historyLabel?.text = historyTitle
-        self.metricLabel?.text = "Average: \(self.viewModel.dailyAvg.shortString)"
+        self.metricLabel?.text = self.viewModel.metricLabel
         
         self.stepsLabel?.text = "\(today.shortString)"
         self.stepStatistics = stats
