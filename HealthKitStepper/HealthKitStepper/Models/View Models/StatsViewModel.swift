@@ -27,7 +27,7 @@ protocol StatsDataSource {
   var dailyMin: Int { get }
   var dailyMax: Int { get }
   
-  func fetchStats()
+  func fetchStats() -> Bool
 }
 
 
@@ -106,24 +106,28 @@ extension StatsViewModel: StatsDataSource {
     HealthKitHelper.shared.getAuthorizationStatus()
   }
   
-  public func fetchStats() {
-    self.fetchStatsIfNeeded()
+  @discardableResult
+  public func fetchStats() -> Bool {
+    return self.fetchStatsIfNeeded()
   }
 
-  private func fetchStatsIfNeeded() {
+  private func fetchStatsIfNeeded() -> Bool {
     guard let lastFetched = self.lastFetched else {
       self.fetchBlock()
       self.lastFetched = Date()
-      return
+      return true
     }
     
     let debounceCutoff = Calendar.current.date(byAdding: .second,
                                                value: kDebounceThreshold,
                                                to: lastFetched)!
-    guard Date() > debounceCutoff else { return }
+    guard Date() > debounceCutoff else {
+      return false
+    }
     
     self.fetchBlock()
     self.lastFetched = Date()
+    return true
   }
 }
 

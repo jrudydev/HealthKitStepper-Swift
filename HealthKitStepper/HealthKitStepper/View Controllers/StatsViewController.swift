@@ -19,7 +19,7 @@ class StatsViewController: UIViewController, UITableViewDelegate {
   private let cellReuseIdentifier = "stepscell"
   private lazy var dataSource = makeDataSource()
   
-  private var refreshControl: UIRefreshControl!
+  private var refreshControl = UIRefreshControl()
   
   private var stepStatistics = [StepsStatistic]() {
     didSet {
@@ -32,6 +32,13 @@ class StatsViewController: UIViewController, UITableViewDelegate {
   }
   
   private let viewModel = StatsViewModel()
+  private var fetchAndCleanUp: () -> Void {
+    return {
+      if !self.viewModel.fetchStats() {
+        self.refreshControl.endRefreshing()
+      }
+    }
+  }
   
   private var subscriptions = Set<AnyCancellable>()
   
@@ -41,7 +48,7 @@ class StatsViewController: UIViewController, UITableViewDelegate {
     self.setupTableView()
     self.setupObservers()
     
-    self.viewModel.fetchStats()
+    self.fetchAndCleanUp()
   }
   
 }
@@ -84,7 +91,7 @@ extension StatsViewController {
         self.stepsLabel?.text = "\(today.shortString)"
         self.stepStatistics = stats
         
-        self.refreshControl?.endRefreshing()
+        self.refreshControl.endRefreshing()
       }
       .store(in: &subscriptions)
     
@@ -120,9 +127,8 @@ extension StatsViewController {
     self.tableView.dataSource = dataSource
     self.tableView.allowsSelection = false
     
-    let refreshControl = UIRefreshControl()
-    refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
-    self.refreshControl = refreshControl
+    self.refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+    self.tableView.refreshControl = self.refreshControl
   }
 }
 
@@ -132,7 +138,7 @@ extension StatsViewController {
   }
   
   @objc func refresh(_ sender: AnyObject) {
-    self.viewModel.fetchStats()
+    self.fetchAndCleanUp()
   }
 }
 

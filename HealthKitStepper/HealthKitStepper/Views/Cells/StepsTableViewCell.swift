@@ -49,6 +49,7 @@ class StepsTableViewCell: UITableViewCell {
   let dateLabel: UILabel = {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
+    label.textColor = .systemGray
 //    label.font = label.font.withSize(60.0)
     label.text = "Jan 1"
     return label
