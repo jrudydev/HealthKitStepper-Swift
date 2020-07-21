@@ -146,7 +146,6 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="rag-M7-fxb" firstAttribute="leading" secondItem="aRE-Mr-Kkp" secondAttribute="leading" constant="20" id="0vv-Gk-bw8"/>
                                     <constraint firstItem="Whl-w1-Snw" firstAttribute="centerY" secondItem="aRE-Mr-Kkp" secondAttribute="centerY" id="Ucu-zJ-Mac"/>
