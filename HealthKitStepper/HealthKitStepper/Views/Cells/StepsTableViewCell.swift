@@ -19,10 +19,17 @@ class StepsTableViewCell: UITableViewCell {
     return view
   }()
   
+  var gradientLayer: CAGradientLayer = {
+    let gradientLayer = CAGradientLayer()
+    gradientLayer.colors = [UIColor.lightGray.cgColor, UIColor.gray.cgColor]
+    gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+    gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+    return gradientLayer
+  }()
+  
   let dowBGView: UIView = {
     let view = UIView()
     view.translatesAutoresizingMaskIntoConstraints = false
-    view.backgroundColor = .systemGray3
     view.clipsToBounds = true
     view.layer.cornerRadius = 30.0
     return view
@@ -62,6 +69,9 @@ class StepsTableViewCell: UITableViewCell {
     
     self.setupViews()
     self.setupConstraints()
+    
+    self.dowBGView.layer.insertSublayer(self.gradientLayer, at: 0)
+    self.gradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: 60.0, height: 60.0)
   }
   
   required init?(coder: NSCoder) {
