@@ -15,6 +15,7 @@ class StatsViewController: UIViewController, UITableViewDelegate {
   @IBOutlet weak var stepsLabel: UILabel!
   @IBOutlet weak var historyLabel: UILabel!
   @IBOutlet weak var metricLabel: UILabel!
+  @IBOutlet weak var metricBGView: UIView!
   
   private let cellReuseIdentifier = "stepscell"
   private lazy var dataSource = makeDataSource()
@@ -45,6 +46,7 @@ class StatsViewController: UIViewController, UITableViewDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    self.setupBlurEffect()
     self.setupTableView()
     self.setupObservers()
     
@@ -78,6 +80,16 @@ extension StatsViewController {
 }
 
 extension StatsViewController {
+  private func setupBlurEffect() {
+    guard let bounds = self.metricBGView?.bounds else { return }
+    
+    let blurEffect = UIBlurEffect(style: .systemChromeMaterialDark)
+    let blurEffectView = UIVisualEffectView(effect: blurEffect)
+    blurEffectView.frame = bounds
+    blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    self.metricBGView?.insertSubview(blurEffectView, at: 0)
+  }
+  
   private func setupObservers() {
     let _ = viewModel.$stepHistory
       .combineLatest(viewModel.$stepsForToday)
@@ -115,6 +127,9 @@ extension StatsViewController {
   
   private func setupTableView() {
     self.tableView.delegate = self
+    
+    let insets = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
+    self.tableView.contentInset = insets
     
     let orderButton = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"),
                                       style: .plain,
